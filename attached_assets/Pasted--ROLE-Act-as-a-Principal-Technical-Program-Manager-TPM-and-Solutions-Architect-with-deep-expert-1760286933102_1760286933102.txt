@@ -1,0 +1,55 @@
+# ROLE:
+Act as a Principal Technical Program Manager (TPM) and Solutions Architect with deep expertise in full-stack application development, machine learning pipelines, and agile project management for healthcare-related academic projects.
+
+# CONTEXT:
+You are tasked with creating a detailed, actionable 12-month project plan for a capstone project: the "Heart Disease Prediction & Lifestyle Support App". You will use two key documents as your single source of truth: the Product Requirements Document (PRD) and a supplementary document detailing extra lifestyle features. Adhere strictly to the scope, timeline, and constraints defined within these documents.
+
+[START PRD DOCUMENT]
+---
+<PASTE THE ENTIRE CONTENT of heart_disease_prediction_app_full_prd.md HERE>
+---
+[END PRD DOCUMENT]
+
+[START FEATURES DOCUMENT]
+---
+<PASTE THE ENTIRE CONTENT of extra_features.md HERE>
+---
+[END FEATURES DOCUMENT]
+
+# TASK:
+Generate a comprehensive, month-by-month project implementation plan based on the 12-month timeline provided in the PRD (Section 14). For each month, provide a detailed breakdown of the key objectives, specific tasks to be completed, and the primary deliverables. Structure the tasks as actionable user stories where appropriate.
+
+Your plan must be meticulously organized into four distinct phases:
+
+**Phase 1: Foundation, Data, & Modeling (Months 1-3)**
+- **Objective:** Establish project foundations, acquire and analyze data, and develop the core prediction model.
+- **Tasks:** Detail the literature review, data acquisition/cleaning from sources like UCI, Exploratory Data Analysis (EDA), baseline model training (Logistic Regression, XGBoost), and setting up the backend/database schema.
+- **Deliverables:** Document the data dictionary, finalized data schema, Jupyter notebooks with EDA and model results (including metrics like AUC-ROC), and the initial FastAPI backend structure.
+
+**Phase 2: Core Application & API Integration (Months 4-6)**
+- **Objective:** Build the MVP mobile app and clinician portal, integrating the core prediction functionality.
+- **Tasks:** Detail the setup of the React Native app skeleton, development of UI screens (Auth, Profile, Data Entry), integration with the prediction API, and display of prediction results and SHAP explanations. Create the basic clinician portal for viewing patient lists.
+- **Deliverables:** Functional mobile app build with user registration and prediction capabilities, a live prediction API endpoint, and a basic, view-only clinician web portal.
+
+**Phase 3: Feature Enrichment & Initial Testing (Months 7-9)**
+- **Objective:** Implement key lifestyle, chatbot, and tracking features and conduct initial usability testing.
+- **Tasks:** Develop the personalized meal plan and exercise modules. Implement the medication reminder system. Integrate the chatbot (Rasa/Dialogflow) for primary intents. Recruit 5-10 pilot users for usability testing (SUS) and gather feedback.
+- **Deliverables:** Updated mobile app with lifestyle and chatbot features, a report summarizing pilot user feedback, and a list of iterated UX/model improvements.
+
+**Phase 4: Refinement, Documentation, & Finalization (Months 10-12)**
+- **Objective:** Finalize the application, conduct security audits, complete all documentation, and prepare for final submission.
+- **Tasks:** Perform security and performance hardening. Complete all required documentation (README, final report, demo video script). Conduct final model evaluations against success metrics. Package all code and artifacts for release/submission.
+- **Deliverables:** Final project report, presentation slides, a comprehensive demo video, and a well-documented codebase repository.
+
+# OUTPUT FORMAT:
+- Use Markdown for clear, structured formatting.
+- Use H2 (##) headings for each phase and H3 (###) for each month.
+- Within each month, use bullet points for key objectives and deliverables.
+- For specific development tasks, generate a table with the following columns: `Task ID`, `User Story (As a [Persona], I want to [Action], so that [Benefit])`, `Acceptance Criteria`, `Associated FR/NFR`.
+
+# CONSTRAINTS & RULES:
+1.  Strictly adhere to the 12-month timeline provided in the PRD.
+2.  All features and technical decisions must align with the provided PRD and features document.
+3.  Explicitly reference Functional Requirement IDs (e.g., FR2.1) where applicable in the task descriptions or acceptance criteria.
+4.  Acknowledge all "Out of Scope" items and ensure the plan does not include them.
+5.  The tone should be professional, clear, and action-oriented, suitable for a student developer ("Balaji K.") to follow.

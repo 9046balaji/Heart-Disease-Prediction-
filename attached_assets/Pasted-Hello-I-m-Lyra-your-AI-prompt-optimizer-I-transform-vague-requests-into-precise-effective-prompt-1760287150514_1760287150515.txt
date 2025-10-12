@@ -1,0 +1,146 @@
+Hello! I'm Lyra, your AI prompt optimizer. I transform vague requests into precise, effective prompts that deliver better results.
+
+*What I need to know:*
+
+* *Target AI:* ChatGPT, Claude, Gemini, or Other
+
+* *Prompt Style:* DETAIL (I'll ask clarifying questions first) or BASIC (quick optimization)
+
+*Examples:*
+
+* "DETAIL using ChatGPT — Write me a marketing email"
+
+* "BASIC using Claude — Help with my resume"
+
+Just share your rough prompt and I'll handle the optimization!
+
+# DECONSTRUCT — what you gave me (short)
+
+You provided a full Product Requirements Document (PRD) for a “Heart Disease Prediction & Lifestyle Support App” and an extra-features list (diet, exercise, UX ideas). I used those as the source spec for the prompt I’ll produce.  
+
+# DIAGNOSE — what the prompt needs to solve
+
+* Output: A **fully-functional** implementation plan (code + assets) for a mobile-first app + clinician web portal + backend ML service + chatbot.
+* Key constraints: privacy/consent, JWT auth, SHAP explainability, performance (API ≤ 500 ms), and clear medical disclaimers. 
+* Extra requirements you asked: **animations** and robustness (production-minded deliverables). Use the extra-features doc for content modules (meal plans, exercise, tips, safety). 
+* Missing pieces (I will set reasonable defaults inside the prompt so the AI doesn't stall): e.g., sample dataset (UCI heart disease), placeholder content assets, and animation style choices.
+
+# DEVELOP — high-level choices I built into the optimized prompt
+
+* Role & persona: “You are an expert full-stack dev + ML engineer + UX animator (React Native + FastAPI + scikit-learn/SHAP).”
+* Tech stack: React Native (mobile), React (web/clinician portal), FastAPI (backend), PostgreSQL, Docker, scikit-learn/XGBoost, SHAP for explainability, Rasa/Dialogflow for chatbot (configurable). 
+* Deliverables: runnable repo structure, CI-friendly Dockerfiles, end-to-end tests, sample dataset & notebook, UI screens (with animation spec), developer tasks, acceptance criteria, and deployment instructions.
+* Animations: describe micro-interactions (prediction card reveal, SHAP bar animation, meal-plan carousel, exercise demo animations) with technical implementations (Lottie + React Native Reanimated / Framer Motion on web).
+* Safety + legal: prominent disclaimers, emergency flow modal, consent screens, and clinician review gates. 
+
+# DELIVER — the final, paste-ready optimized prompt
+
+**Your Optimized Prompt (paste this to an AI developer assistant or an engineering team):**
+
+You are an expert full-stack engineer, ML engineer, UX designer and front-end animator. Your mission: produce a **fully functional, production-quality** Heart Disease Prediction & Lifestyle Support app following the PRD and extra feature set provided. Work as if building a graduate capstone project that must be demo-ready and testable end-to-end. Deliver code, docs, tests, demo assets, and deployment steps.
+
+**Primary goals**
+
+1. Implement a mobile-first app (React Native) + clinician web portal (React) + backend (FastAPI) + ML model service (scikit-learn/XGBoost) + chatbot (Rasa or Dialogflow). 
+2. Predictions must return: risk score (0–100%), categorical label (low/medium/high), model_version, and **top 3 SHAP feature contributions** with plain-English explanations. 
+3. Include a polished UI with animations for key interactions (see “Animations” below). Use Lottie for complex animations and Reanimated/Framer Motion for micro-interactions.
+4. Provide lifestyle modules (meal plans, exercise plans, medication reminders, grocery generator) using the extra-features content and templates. 
+5. Ship a runnable repository with Docker Compose for local dev, unit/integration tests, CI hints (GitHub Actions), and step-by-step README for deployment to a single cloud VM.
+
+**Must-deliver artifacts**
+
+* Monorepo structure: `/app/mobile` (React Native), `/app/web` (React clinician portal), `/service/api` (FastAPI), `/service/model` (training notebook + inference API), `/service/chatbot` (Rasa/Dialogflow configs), `/infra` (Docker Compose, Terraform hints).
+* FastAPI endpoints per PRD (auth, profile, clinical-entry, predict, predictions, export, chatbot proxy). Inputs validated with pydantic. Include JWT auth + refresh tokens. 
+* ML: Jupyter notebooks that train baseline logistic regression and XGBoost on the UCI heart disease datasets (or a synthetic dataset if real data isn’t provided), model artifact storage, semantic version tagging, and SHAP explainability pipeline. Include evaluation notebook (AUC, sensitivity) and a `model_metadata.json`. 
+* UI screens: onboarding/consent, profile, clinical data entry, home, predict (with interactive explanation), suggestions (meal/exercise/grocery), chatbot, history, settings. Provide Figma-like JSON or component tree and accessible color tokens. 
+* Animations (see detailed list below): Lottie JSONs + React Native usage examples; web animations via Framer Motion.
+* Chatbot: intents, training utterances, and responses for `ask_risk_explanation`, `ask_food_advice`, `ask_exercise_advice`, `emergency_actions`, `medication_reminder_help`. Provide export in Rasa format (nlu.yml, rules.yml) or Dialogflow JSON.  
+* Safety and compliance: onboarding consent modal, explicit medical disclaimer screen, emergency button (call / SMS composition), and data privacy notes. 
+
+**UI / Animation Specs (implementable)**
+
+* Prediction card reveal: when prediction returns, animate the card sliding up while the circular gauge animates from 0→score over 800ms. Use Lottie for the gauge animation and a subtle scale-in for the card (Reanimated: `withTiming` ease-out).
+* SHAP contribution bars: show the top 3 features with horizontal bars animating to their contribution magnitudes; color-coded (positive red, negative green), and on tap expand a tooltip with the plain-English explanation. Animate bar widths with `requestAnimationFrame` or Framer Motion spring.
+* Meal plan carousel: horizontally swipeable cards with parallax image layers; when a meal is selected, animate ingredients flying (micro-animation) into a “Grocery List” basket icon (small translate + fade). Use Lottie for a compact “add to basket” sparkle.
+* Exercise demo: short illustrated animations (SVG sprite frames or Lottie) loop at low frame-rate; between state transitions show a 3-2-1 countdown animation before starting. Include an accessible “text-only” demo fallback.
+* Micro-interactions: button presses use 2xl rounded shadows and 50 ms press scale; form field validation shows shake animation on error.
+* Implementation notes: provide Lottie JSON placeholders and show exact integration examples (React Native + `lottie-react-native`) and web (`react-lottie-player` + Framer Motion).
+
+**Data & Model considerations**
+
+* Default to UCI heart disease datasets for training (Cleveland, etc.). Document dataset provenance, columns, preprocessing steps, and known biases. Provide a synthetic data generator for local dev to allow larger experiments. 
+* Model endpoint must log `{timestamp, features_json, prediction_score, prediction_label, model_version, shap_top_features}` to a `prediction_log` table for audits and drift detection. 
+
+**APIs & Contracts (short)**
+
+* `POST /auth/register` → `{email, password}` → `{access_token, refresh_token}`
+* `POST /auth/login` → same as above
+* `GET /profile` → user profile
+* `PUT /profile` → update profile (include diet preference / allergies / comorbidities)
+* `POST /clinical-entry` → clinical row → saved + optional immediate predict flag
+* `POST /predict` → features JSON → returns `{score, label, model_version, shap_top_features}` (SHAP top3 explained)
+* `GET /predictions/{user_id}` → history
+* `POST /chatbot/message` → proxied to Rasa/Dialogflow, returns structured suggestions or actions
+
+**Testing & Acceptance Criteria**
+
+* Unit tests: backend routes + model inference mocks; aim ≥ 70% backend coverage.
+* Integration tests: end-to-end predict flow (mobile → API → model → mobile) in CI using Docker Compose.
+* Performance: a typical single-record inference (including SHAP top-3) must respond ≤ 500ms on a modest cloud VM (document environment used). If exact SHAP runtime exceeds target, implement approximate SHAP (e.g., TreeSHAP optimizations or precomputed feature importances) and document tradeoffs. 
+* UX: SUS ≥ 70 targeted in pilot; chat intents ≥ 80% match in pilot testing (provide synthetic test utterances). 
+
+**Deliver the following in the final PR**
+
+1. A runnable monorepo on GitHub with clear README and one-click Docker Compose dev start.
+2. Jupyter notebooks + saved model artifacts and `model_metadata.json`.
+3. Mobile and web builds with sample environment variables and seed user (no real PII).
+4. Simple demo video GIFs (30–60s) showing the prediction flow, SHAP explanation, meal plan addition, and emergency modal.
+5. Chatbot training files and a small script to run a local Rasa server.
+6. Test reports and simple instructions for clinician review of content.
+7. A short “handoff” document: how to retrain, how to update animations, and how to add new meal/exercise modules.
+
+**Constraints & Safety**
+
+* Prominently display: “For informational use only — not medical advice.” Implement clinician sign-off for any content labeled as “medical advice.” 
+* Store PII separately and encrypted; provide opt-out for research data sharing. 
+
+**Extra (nice-to-have)**
+
+* Progressive web fallback for clinician portal.
+* Multi-model ensemble and model versioning UI.
+* Push notifications via FCM/APNs for reminders.
+
+**Developer Notes & Implementation Hints**
+
+* Use `react-native-gesture-handler`, `react-native-reanimated` (v2) for mobile animations. Use `lottie-react-native` for Lottie. Web: `framer-motion` + `react-lottie-player`.
+* For SHAP performance, prefer `shap.TreeExplainer` for XGBoost and compute only top-k contributions server-side. Cache explanation results per input hash for repeated queries.
+* For demo data, include a small CLI tool `scripts/gen_synthetic.py` that emits typical clinical rows for e2e tests.
+
+**Acceptance criteria (concrete, copy into CI)**
+
+* `POST /predict` returns response ≤ 500ms (document measured latency in CI) for a single test payload.
+* `pytest` runs with >70% coverage on backend.
+* Mobile app can run in Expo dev client and reproduce the prediction & animated UI flow.
+
+**When done, produce a single ZIP** with the repo and a `README_deployment.md` for reviewers.
+
+---
+
+**What Changed:**
+• Turned your PRD and extra-features notes into a single actionable engineering prompt that specifies roles, tech stack, deliverables, exact API contracts, animation requirements, testing criteria, and safety constraints.  
+
+**Techniques Applied:**
+• Role assignment (full-stack + ML + UX animator), constraint-driven specs (latency, privacy), modular output breakdown (repo structure + artifacts), and explicit animation implementation guidance (Lottie + Reanimated/Framer Motion).
+
+**Pro Tip:**
+Paste the full optimized prompt to an AI assistant or use it as a single spec for a small dev team. If you intend to generate code automatically, ask the assistant to first scaffold the monorepo and produce a minimal MVP end-to-end example (one dataset, one model, prediction UI with animations) before expanding content modules.
+
+---
+
+If you want, I’ll now:
+
+* produce the exact `README` + monorepo scaffold (file tree + minimal example code) for the MVP, **or**
+* generate the Rasa training files and sample utterances for the chatbot, **or**
+* produce the animation Lottie JSON templates and small React Native usage snippets.
+
+Tell me which of those to produce *next* and I’ll generate it immediately.
