@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Heart, Activity, MessageCircle, Shield, ArrowRight } from "lucide-react";
+import { Heart, Activity, MessageCircle, Shield, ArrowRight, LogIn, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import MedicalDisclaimer from "@/components/MedicalDisclaimer";
 import EmergencyButton from "@/components/EmergencyButton";
 import ThemeToggle from "@/components/ThemeToggle";
+import BottomNav from "@/components/BottomNav";
 
 export default function Home() {
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(
     localStorage.getItem("disclaimer_accepted") === "true"
   );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   const handleAcceptDisclaimer = () => {
     localStorage.setItem("disclaimer_accepted", "true");
@@ -54,7 +62,25 @@ export default function Home() {
               <p className="text-xs text-muted-foreground">AI Health Assistant</p>
             </div>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            {!isAuthenticated ? (
+              <div className="flex gap-2">
+                <Link href="/login">
+                  <Button variant="ghost" size="sm" className="gap-1">
+                    <LogIn className="h-4 w-4" />
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button variant="ghost" size="sm" className="gap-1">
+                    <UserPlus className="h-4 w-4" />
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
+            ) : null}
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -76,6 +102,31 @@ export default function Home() {
             </p>
           </div>
         </section>
+
+        {!isAuthenticated ? (
+          <section className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+            <div className="max-w-2xl space-y-4">
+              <h3 className="text-2xl font-bold">Get Started with HeartGuard</h3>
+              <p className="text-muted-foreground">
+                Create an account or sign in to access personalized health insights, track your progress, and connect with our AI health assistant.
+              </p>
+              <div className="flex gap-2">
+                <Link href="/register">
+                  <Button size="lg" className="gap-2">
+                    Create Account
+                    <UserPlus className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="lg" variant="outline" className="gap-2">
+                    Sign In
+                    <LogIn className="h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section className="grid md:grid-cols-3 gap-6">
           {features.map((feature, index) => {
@@ -122,21 +173,25 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-          <div className="max-w-2xl space-y-4">
-            <h3 className="text-2xl font-bold">Ready to assess your heart health?</h3>
-            <p className="text-muted-foreground">
-              Take the first step towards better cardiovascular health. Our AI-powered assessment takes just 5 minutes.
-            </p>
-            <Link href="/predict">
-              <Button size="lg" className="gap-2" data-testid="button-start-assessment">
-                Start Assessment
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </section>
+        {isAuthenticated ? (
+          <section className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+            <div className="max-w-2xl space-y-4">
+              <h3 className="text-2xl font-bold">Ready to assess your heart health?</h3>
+              <p className="text-muted-foreground">
+                Take the first step towards better cardiovascular health. Our AI-powered assessment takes just 5 minutes.
+              </p>
+              <Link href="/predict">
+                <Button size="lg" className="gap-2" data-testid="button-start-assessment">
+                  Start Assessment
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </section>
+        ) : null}
       </main>
+      
+      <BottomNav />
     </div>
   );
 }

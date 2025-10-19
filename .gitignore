@@ -4,3 +4,219 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Sensitive files
+.env*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Uploads
+uploads/
+
+# Local/Temporary files
+.local/
+.replit
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+
+# OS generated files
+Thumbs.db
+
+# Git configuration
+.git/hooks/
+.git/config
+
+# Certificate files
+*.pem
+*.key
+*.crt
+
+# Backup files
+*.bak
+*~
+
+# Temporary files
+tmp/
+.temp/
+*.tmp
+
+# IDE specific
+*.idea/
+*.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Build artifacts
+build/
+coverage/
+.nyc_output/
+
+# Dependency directories
+jspm_packages/
+web_modules/
+
+# Typescript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# parcel-bundler cache
+.cache/
+.parcel-cache/
+
+# next.js build output
+.next/
+out/
+
+# nuxt.js build output
+.nuxt/
+
+# vuepress build output
+.vuepress/dist/
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+*.db
+
+# TernJS port file
+.tern-port
+
+# Testing
+coverage/
+.nyc_output/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Jest
+jest/
+
+# Test Results
+junit.xml
+
+test-results/
+
+# Test Folders and Files
+__tests__/
+__snapshots__/
+*.test.*
+*.spec.*
+*.test.js
+*.test.ts
+*.test.tsx
+*.spec.js
+*.spec.ts
+*.spec.tsx
+
+tests/
+*.test.*
+*.spec.*
+
+# Additional folders requested by user
+Implemented/
+GITHUB/
+Database_Readmi/
+Database/
+chatbot/
+attached_assets/
+Readmi_Files/
+server/__tests__/
+
+# Test Coverage
+*.lcov
+*.lcov.info
+
+# Test Reports
+*.test-report.*
+*.coverage.*
+
+# Test Artifacts
+*.test-artifacts
+*.test-output
+
+# Yarn 3 plug'n'play
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn/pnp.js
+.yarn/pnp.loader.mjs
+.yarn/patches
+.yarn/plugins
+.yarn/releases
+.yarn/sdks
+.yarn/versions
+
+# Yarn Integrity file
+.yarn-integrity
+
+# pnpm
+pnpm-lock.yaml
+
+# Optional Mac files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Debug files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+*.diag
+
+# VS Code files
+.vscode/
+
+# VIM swap files
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+
+# IntelliJ
+*.iml
+*.iws
+out/
+
+# Project documentation files
+PROJECT_STRUCTURE_ANALYSIS.md
+ALL_MISSING_FEATURES_CHECKLIST.md
+UNIMPLEMENTED_FEATURES.md
+
+# Scripts directory
+scripts/
+
+# Mac files
+.DS_Store

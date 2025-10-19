@@ -32,5 +32,12 @@ export default function HealthDashboardExample() {
     }
   ];
 
-  return <HealthDashboard vitals={mockVitals} lastUpdated="Today, 9:30 AM" />;
+  const mockVitalHistory = [
+    { date: "Jan 1", "Blood Pressure": 120, "Heart Rate": 70, "Cholesterol": 200, "Blood Glucose": 100 },
+    { date: "Jan 2", "Blood Pressure": 122, "Heart Rate": 72, "Cholesterol": 198, "Blood Glucose": 102 },
+    { date: "Jan 3", "Blood Pressure": 125, "Heart Rate": 71, "Cholesterol": 196, "Blood Glucose": 104 },
+    { date: "Jan 4", "Blood Pressure": 128, "Heart Rate": 72, "Cholesterol": 195, "Blood Glucose": 105 },
+  ];
+
+  return <HealthDashboard vitals={mockVitals} lastUpdated="Today, 9:30 AM" vitalHistory={mockVitalHistory} />;
 }

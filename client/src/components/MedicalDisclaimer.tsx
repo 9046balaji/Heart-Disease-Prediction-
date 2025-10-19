@@ -1,13 +1,8 @@
-import { AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { AlertTriangle, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface MedicalDisclaimerProps {
   open: boolean;
@@ -15,54 +10,119 @@ interface MedicalDisclaimerProps {
 }
 
 export default function MedicalDisclaimer({ open, onAccept }: MedicalDisclaimerProps) {
+  const [accepted, setAccepted] = useState(false);
+  
+  // Check if user has already accepted the disclaimer
+  useEffect(() => {
+    const hasAccepted = localStorage.getItem("disclaimer_accepted") === "true";
+    if (hasAccepted) {
+      setAccepted(true);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem("disclaimer_accepted", "true");
+    setAccepted(true);
+    onAccept();
+  };
+
+  if (!open || accepted) {
+    return null;
+  }
+
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-2xl" data-testid="modal-disclaimer">
-        <DialogHeader>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 rounded-full bg-destructive/10">
-              <AlertCircle className="h-6 w-6 text-destructive" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-full bg-yellow-100">
+              <AlertTriangle className="h-6 w-6 text-yellow-600" />
             </div>
-            <DialogTitle className="text-2xl">Important Medical Disclaimer</DialogTitle>
+            <CardTitle className="text-xl">Medical Disclaimer</CardTitle>
           </div>
-          <DialogDescription className="text-base leading-relaxed space-y-4 pt-4">
-            <p className="font-medium text-foreground">
-              This application is for informational and educational purposes only. It is NOT a medical device and should NOT be used as a substitute for professional medical advice, diagnosis, or treatment.
+          <CardDescription>
+            Important information about the use of this application
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+            <div className="flex items-start gap-2">
+              <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-blue-900">Informational Use Only</h3>
+                <p className="text-sm text-blue-700 mt-1">
+                  This application provides heart disease risk assessments for informational purposes only. 
+                  It is not a substitute for professional medical advice, diagnosis, or treatment.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-3 text-sm">
+            <p>
+              <span className="font-medium">Important:</span> The information provided by this application 
+              should not be used as a sole basis for making medical decisions. Always consult with a 
+              qualified healthcare professional for any medical concerns.
             </p>
             
-            <div className="space-y-3 text-muted-foreground">
+            <div className="space-y-2">
+              <h4 className="font-medium">Limitations</h4>
+              <ul className="space-y-1 list-disc list-inside">
+                <li>The risk assessment is based on a predictive model and cannot guarantee accuracy</li>
+                <li>Individual results may vary and should be interpreted by a healthcare professional</li>
+                <li>This application does not replace regular medical check-ups and screenings</li>
+                <li>Emergency situations require immediate professional medical attention</li>
+              </ul>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-medium">Emergency Situations</h4>
               <p>
-                <strong className="text-foreground">Risk Predictions:</strong> The AI-powered risk assessments are based on statistical models and may not account for all individual health factors. They should be considered as general guidance only.
+                If you experience any of the following symptoms, seek immediate medical attention:
               </p>
-              
-              <p>
-                <strong className="text-foreground">Always Seek Professional Care:</strong> If you experience chest pain, shortness of breath, or other concerning symptoms, seek immediate medical attention. Call emergency services right away.
-              </p>
-              
-              <p>
-                <strong className="text-foreground">Lifestyle Recommendations:</strong> Diet, exercise, and medication guidance provided are general suggestions. Consult your healthcare provider before making any changes to your health routine.
-              </p>
-              
-              <p>
-                <strong className="text-foreground">Data Privacy:</strong> Your health information is stored securely and used only for providing personalized recommendations. You can opt out of research data sharing in settings.
+              <ul className="space-y-1 list-disc list-inside">
+                <li>Chest pain or pressure</li>
+                <li>Severe shortness of breath</li>
+                <li>Fainting or severe dizziness</li>
+                <li>Rapid or irregular heartbeat</li>
+                <li>Severe nausea or sweating</li>
+              </ul>
+            </div>
+            
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-50 border border-yellow-200">
+              <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-yellow-700">
+                <span className="font-medium">Warning:</span> This application is not a medical device 
+                and has not been evaluated by regulatory authorities for medical use. 
+                The developers are not responsible for any decisions made based on the information provided.
               </p>
             </div>
-
-            <p className="font-semibold text-foreground pt-2">
-              By continuing, you acknowledge that you understand this tool is for informational purposes only and will consult healthcare professionals for medical decisions.
-            </p>
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="gap-2">
+          </div>
+          
+          <div className="flex items-center gap-2 pt-2">
+            <Checkbox 
+              id="accept-disclaimer" 
+              checked={accepted}
+              onCheckedChange={(checked) => setAccepted(checked === true)}
+            />
+            <label 
+              htmlFor="accept-disclaimer" 
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              I have read and understood this disclaimer
+            </label>
+          </div>
+        </CardContent>
+        <CardFooter>
           <Button 
-            onClick={onAccept}
-            className="w-full sm:w-auto"
-            data-testid="button-accept-disclaimer"
+            onClick={handleAccept}
+            disabled={!accepted}
+            className="w-full"
           >
-            I Understand and Accept
+            Accept and Continue
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }

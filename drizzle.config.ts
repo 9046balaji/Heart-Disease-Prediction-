@@ -1,14 +1,17 @@
 import { defineConfig } from "drizzle-kit";
+import dotenv from "dotenv";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL, ensure the database is provisioned");
-}
+dotenv.config();
+
+// For MySQL in XAMPP, we'll use a local connection
+// You'll need to set up your MySQL connection details in .env file
+const DATABASE_URL = process.env.DATABASE_URL || "mysql://root:@localhost:3307/heartguard";
 
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
-  dialect: "postgresql",
+  dialect: "mysql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: DATABASE_URL,
   },
 });

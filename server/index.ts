@@ -1,6 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
+import { createServer } from "http";
+import { setupRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { Server } from "http";
+import { errorHandler } from "./utils/errors";
+import { logger } from "./utils/logger";
 
 const app = express();
 app.use(express.json());
@@ -30,6 +34,9 @@ app.use((req, res, next) => {
       }
 
       log(logLine);
+      
+      // Log with enhanced logger
+      logger.logRequest(req.method, path, res.statusCode, duration, capturedJsonResponse);
     }
   });
 
@@ -37,15 +44,13 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  setupRoutes(app);
+  
+  // Create HTTP server from Express app
+  const server = createServer(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
-  });
+  // Use our enhanced error handling middleware
+  app.use(errorHandler);
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
@@ -57,15 +62,40 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
+  // Other ports are firewalled. Default to 5001 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
+  const port = parseInt(process.env.PORT || '5001', 10);
+  
+  // Handle server errors gracefully
+  server.on('error', (err: Error) => {
+    if (err.message.includes('EADDRINUSE')) {
+      console.log(`Port ${port} is already in use. Trying port ${port + 1}...`);
+      // Try the next port
+      server.listen({
+        port: port + 1,
+        host: "127.0.0.1",
+      }, () => {
+        log(`serving on port ${port + 1}`);
+        logger.info(`Server started on port ${port + 1}`);
+      });
+    } else if (err.message.includes('ENOTSUP')) {
+      // Fallback to a simpler listen method for Windows compatibility
+      server.listen(port, '127.0.0.1', () => {
+        log(`serving on port ${port}`);
+      });
+    } else {
+      console.error('Server error:', err);
+      logger.error('Server error', { error: err.message }, err.stack);
+    }
+  });
+  
+  // Try to listen with the preferred configuration
   server.listen({
     port,
-    host: "0.0.0.0",
-    reusePort: true,
+    host: "127.0.0.1", // Use IPv4 localhost
   }, () => {
     log(`serving on port ${port}`);
+    logger.info(`Server started on port ${port}`);
   });
 })();

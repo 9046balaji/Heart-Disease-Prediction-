@@ -32,9 +32,24 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    port: 3001, // Changed from 3000 to 3001
+    strictPort: true, // Fail if port is already in use
+    host: true, // Listen on all addresses
+    hmr: {
+      host: "localhost",
+      port: 3001, // Changed from 3000 to 3001
+    },
     fs: {
       strict: true,
       deny: ["**/.*"],
     },
+    // Proxy API requests to the backend server
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   },
 });

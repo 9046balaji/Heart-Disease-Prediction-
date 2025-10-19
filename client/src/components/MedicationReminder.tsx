@@ -1,8 +1,10 @@
-import { Pill, Clock, Check } from "lucide-react";
+import { useState } from "react";
+import { Pill, Clock, Check, Plus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 interface Medication {
   id: string;
@@ -12,15 +14,88 @@ interface Medication {
   taken: boolean;
 }
 
-interface MedicationReminderProps {
-  medications: Medication[];
-  onToggleTaken: (id: string) => void;
-}
+// Mock API functions (these would be replaced with actual API calls)
+const fetchMedications = async (): Promise<Medication[]> => {
+  // In a real implementation, this would be an API call
+  return [
+    { id: "1", name: "Aspirin", dosage: "100mg", time: "8:00 AM", taken: false },
+    { id: "2", name: "Lisinopril", dosage: "10mg", time: "8:00 AM", taken: false },
+    { id: "3", name: "Atorvastatin", dosage: "20mg", time: "9:00 PM", taken: true },
+  ];
+};
 
-export default function MedicationReminder({ medications, onToggleTaken }: MedicationReminderProps) {
+const updateMedicationTaken = async (id: string, taken: boolean): Promise<Medication> => {
+  // In a real implementation, this would be an API call
+  return { id, name: "Medication", dosage: "10mg", time: "8:00 AM", taken };
+};
+
+const addMedication = async (medication: Omit<Medication, "id" | "taken">): Promise<Medication> => {
+  // In a real implementation, this would be an API call
+  return { id: "4", ...medication, taken: false };
+};
+
+export default function MedicationReminder() {
+  const queryClient = useQueryClient();
+  
+  // Fetch medications
+  const { data: medications = [], isLoading, error } = useQuery({
+    queryKey: ["medications"],
+    queryFn: fetchMedications,
+  });
+  
+  // Mutation for updating medication taken status
+  const updateMedicationMutation = useMutation({
+    mutationFn: ({ id, taken }: { id: string; taken: boolean }) => 
+      updateMedicationTaken(id, taken),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["medications"] });
+    },
+  });
+  
+  // Mutation for adding a new medication
+  const addMedicationMutation = useMutation({
+    mutationFn: addMedication,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["medications"] });
+    },
+  });
+  
+  const handleToggleTaken = (id: string, taken: boolean) => {
+    updateMedicationMutation.mutate({ id, taken });
+  };
+  
+  const handleAddMedication = () => {
+    // In a real implementation, this would open a modal or form
+    addMedicationMutation.mutate({
+      name: "New Medication",
+      dosage: "10mg",
+      time: "8:00 AM"
+    });
+  };
+  
+  if (isLoading) {
+    return (
+      <Card data-testid="card-medication-reminder">
+        <CardContent className="flex items-center justify-center h-64">
+          <p>Loading medications...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  if (error) {
+    return (
+      <Card data-testid="card-medication-reminder">
+        <CardContent className="flex items-center justify-center h-64">
+          <p>Error loading medications</p>
+        </CardContent>
+      </Card>
+    );
+  }
+  
   const todayMeds = medications.filter(m => !m.taken);
   const completedMeds = medications.filter(m => m.taken);
-
+  
   return (
     <Card data-testid="card-medication-reminder">
       <CardHeader className="space-y-1 pb-4">
@@ -54,7 +129,7 @@ export default function MedicationReminder({ medications, onToggleTaken }: Medic
                 <Checkbox
                   id={med.id}
                   checked={med.taken}
-                  onCheckedChange={() => onToggleTaken(med.id)}
+                  onCheckedChange={(checked) => handleToggleTaken(med.id, !!checked)}
                   data-testid={`checkbox-medication-${med.id}`}
                 />
                 <div className="flex-1">
@@ -74,7 +149,7 @@ export default function MedicationReminder({ medications, onToggleTaken }: Medic
             </div>
           )}
         </div>
-
+        
         {completedMeds.length > 0 && (
           <div className="pt-4 border-t space-y-2">
             <h4 className="text-sm font-semibold text-muted-foreground">Completed Today</h4>
@@ -92,14 +167,14 @@ export default function MedicationReminder({ medications, onToggleTaken }: Medic
             ))}
           </div>
         )}
-
+        
         <Button 
           variant="outline" 
           className="w-full gap-2"
-          onClick={() => console.log('Add medication')}
+          onClick={handleAddMedication}
           data-testid="button-add-medication"
         >
-          <Pill className="h-4 w-4" />
+          <Plus className="h-4 w-4" />
           Add Medication
         </Button>
       </CardContent>

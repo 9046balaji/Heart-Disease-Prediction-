@@ -1,0 +1,111 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1760377820373,
+      "tag": "0000_material_phantom_reporter",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1760377820374,
+      "tag": "001_init_users",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1760377820375,
+      "tag": "002_add_clinical_data_and_predictions",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1760377820376,
+      "tag": "003_add_lab_results",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1760377820377,
+      "tag": "004_add_missing_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1760377820378,
+      "tag": "005_add_nutrition_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1760377820379,
+      "tag": "006_enhance_meal_plans_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1760377820380,
+      "tag": "007_create_exercises_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1760377820381,
+      "tag": "008_enhance_exercise_plans_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1760377820382,
+      "tag": "009_add_level_to_exercise_plans",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1760377820383,
+      "tag": "010_create_food_logs_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1760377820384,
+      "tag": "011_create_portion_guidelines_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1760377820385,
+      "tag": "012_create_symptoms_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1760377820386,
+      "tag": "013_update_existing_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1760377820387,
+      "tag": "014_add_recipe_image_and_dietary_restrictions",
+      "breakpoints": true
+    }
+  ]
+}

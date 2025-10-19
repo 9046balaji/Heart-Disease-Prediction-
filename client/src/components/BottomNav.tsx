@@ -1,4 +1,4 @@
-import { Home, Activity, MessageCircle, User, Heart } from "lucide-react";
+import { Home, Activity, Dumbbell, Utensils, User, MessageCircle } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function BottomNav() {
@@ -6,8 +6,9 @@ export default function BottomNav() {
 
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
-    { icon: Heart, label: "Predict", path: "/predict" },
     { icon: Activity, label: "Health", path: "/health" },
+    { icon: Dumbbell, label: "Exercise", path: "/exercise" },
+    { icon: Utensils, label: "Nutrition", path: "/nutrition" },
     { icon: MessageCircle, label: "Chat", path: "/chat" },
     { icon: User, label: "Profile", path: "/profile" },
   ];
@@ -15,7 +16,7 @@ export default function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t z-40" data-testid="nav-bottom">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-5 h-16">
+        <div className="grid grid-cols-6 h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.path;
